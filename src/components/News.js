@@ -15,7 +15,7 @@ const News = (props)=> {
     const capitalizeFirstLetter = (string)=> {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
-    // document.title = `${this.capitalizeFirstLetter(props.category)} - Khabar`
+    
 
 
     const updateNews = async ()=>{
@@ -34,21 +34,13 @@ const News = (props)=> {
 
     useEffect(() => {
         updateNews(); 
+        // eslint-disable-next-line
+        document.title = `${capitalizeFirstLetter(props.category)} - Khabar`
     }, [])
 
-    const handlePreviousClick = async ()=>{
-        setPage(page-1);
-        updateNews();
-    }
-
-    const handleNextClick = async ()=>{
-        setPage(page+1);
-        updateNews();
-    }
-
     const fetchMoreData = async () => {  
+        const url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${props.apiKey}&page=${page+1}&pageSize=${props.pageSize}`;
         setPage(page+1);
-        const url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${props.apiKey}&page=${page}&pageSize=${props.pageSize}`;
         let data = await fetch(url);
         let parsedData = await data.json()
         setArticles(articles.concat(parsedData.articles))
@@ -57,7 +49,7 @@ const News = (props)=> {
 
     return (
             <>
-            <h1 className="text-center my-4" style={{fontSize: '3.5rem'}} >Khabar - Top {capitalizeFirstLetter(props.category)} Headlines</h1>
+            <h1 className="text-center" style={{fontSize: '3.5rem' , marginTop: '70px'}} >Khabar - Top {capitalizeFirstLetter(props.category)} Headlines</h1>
             {loading && <Spinner />}
             <InfiniteScroll
                 dataLength={articles.length}
@@ -76,12 +68,6 @@ const News = (props)=> {
             </div>
             </div>
             </InfiniteScroll>
-            {/* <---------------------   Prev Next Button -----------------------------> */}
-            {/* <div className="container d-flex justify-content-between" style={{margin: '40px 0px'}}>
-                <button disabled={page<=1} type="button" onClick={this.handlePreviousClick} className="btn btn-dark"> &larr; Previous</button>
-                <button disabled={page+1 > Math.ceil(totalResults/props.pageSize)} type="button" onClick={this.handleNextClick} className="btn btn-dark">Next &rarr;</button>
-            </div> */}
-            {/* <---------------------   Prev Next Button -----------------------------> */}
         </>
     )
 }
