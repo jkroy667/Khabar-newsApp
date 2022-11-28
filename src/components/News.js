@@ -3,6 +3,7 @@ import NewsItems from './NewsItems';
 import Spinner from './Spinner';
 import PropTypes from 'prop-types';
 import InfiniteScroll from "react-infinite-scroll-component";
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 
 
 const News = (props)=> {
@@ -11,6 +12,7 @@ const News = (props)=> {
     const [loading, setLoading] = useState(true)
     const [page, setPage] = useState(1)
     const [totalResults, setTotalResults] = useState(0)
+    let history = useHistory();
 
     const capitalizeFirstLetter = (string)=> {
         return string.charAt(0).toUpperCase() + string.slice(1);
@@ -33,7 +35,12 @@ const News = (props)=> {
     }
 
     useEffect(() => {
-        updateNews(); 
+        if(localStorage.getItem('token')){
+            updateNews(); 
+        }
+        else{
+            history.push("./login");
+        }
         // eslint-disable-next-line
         document.title = `${capitalizeFirstLetter(props.category)} - Khabar`
     }, [])
